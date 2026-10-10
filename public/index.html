@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SnowyPay — Alight Motion Premium</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        colors: {
+          snow: {
+            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
+            300: '#7dd3fc', 400: '#38bdf8', 500: '#0ea5e9',
+            600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e'
+          }
+        }
+      }
+    }
+  };
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  * { -webkit-font-smoothing: antialiased; }
+  html, body { min-height: 100%; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background:
+      radial-gradient(1200px 800px at 10% -10%, rgba(56,189,248,0.18), transparent 60%),
+      radial-gradient(1000px 700px at 110% 10%, rgba(129,140,248,0.16), transparent 60%),
+      radial-gradient(900px 900px at 50% 120%, rgba(14,165,233,0.14), transparent 60%),
+      linear-gradient(180deg, #050914 0%, #070b18 40%, #04070f 100%);
+    background-attachment: fixed;
+    color: #e2e8f0;
+  }
+
+  /* ================= LIQUID GLASS ================= */
+  .glass {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.10),
+      inset 0 -1px 0 rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  .glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05) 40%, transparent 60%, rgba(255,255,255,0.15));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .glass-soft {
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+
+  .glow-ring {
+    box-shadow:
+      0 0 0 1px rgba(56,189,248,0.25),
+      0 0 40px -8px rgba(56,189,248,0.45),
+      inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 45%, #6366f1 100%);
+    box-shadow:
+      0 10px 30px -10px rgba(56,189,248,0.55),
+      inset 0 1px 0 rgba(255,255,255,0.35),
+      inset 0 -1px 0 rgba(0,0,0,0.2);
+    transition: all .25s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 18px 40px -12px rgba(56,189,248,0.75),
+      inset 0 1px 0 rgba(255,255,255,0.4),
+      inset 0 -1px 0 rgba(0,0,0,0.2);
+    filter: brightness(1.05);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+  .input-glass {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.10);
+    transition: all .25s ease;
+  }
+  .input-glass:focus {
+    outline: none;
+    border-color: rgba(56,189,248,0.55);
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.12), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .ice-blob {
+    position: fixed;
+    border-radius: 9999px;
+    filter: blur(90px);
+    opacity: .35;
+    pointer-events: none;
+    z-index: -1;
+    animation: float 18s ease-in-out infinite;
+  }
+  .ice-blob.a { width: 520px; height: 520px; top: -160px; left: -140px; background: #0ea5e9; }
+  .ice-blob.b { width: 460px; height: 460px; top: 10%; right: -160px; background: #6366f1; animation-delay: -6s; }
+  .ice-blob.c { width: 560px; height: 560px; bottom: -220px; left: 30%; background: #22d3ee; animation-delay: -12s; }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(30px,-40px) scale(1.08); }
+  }
+
+  .fade-in { animation: fadeIn .5s ease both; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .pulse-soft { animation: pulseSoft 2.4s ease-in-out infinite; }
+  @keyframes pulseSoft { 0%,100% { opacity: 1; } 50% { opacity: .6; } }
+
+  .spin { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .divider-glass {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+  .step-dot { transition: all .3s ease; }
+  .step-active { background: linear-gradient(135deg, #38bdf8, #6366f1); box-shadow: 0 0 0 4px rgba(56,189,248,0.15); }
+  .step-done { background: linear-gradient(135deg, #22c55e, #10b981); }
+  .step-idle { background: rgba(255,255,255,0.12); }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="ice-blob a"></div>
+<div class="ice-blob b"></div>
+<div class="ice-blob c"></div>
+
+<!-- ============================= NAVBAR ============================= -->
+<header class="sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-4">
+    <nav class="glass rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl glass-soft flex items-center justify-center glow-ring">
+          <svg viewBox="0 0 24 24" fill="none" class="w-5 h-5 text-snow-400" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 2v20M4.93 4.93l14.14 14.14M2 12h20M4.93 19.07l14.14-14.14" stroke-linecap="round"/>
+            <path d="M12 2l2 3-2 3-2-3 2-3zM12 22l2-3-2-3-2 3 2 3z" fill="currentColor" opacity=".5"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight">
+            <span class="bg-gradient-to-r from-snow-300 via-white to-indigo-300 bg-clip-text text-transparent">SnowyPay</span>
+          </h1>
+          <p class="text-[10px] sm:text-xs text-slate-400 -mt-0.5">Alight Motion Premium</p>
+        </div>
+      </div>
+
+      <div class="hidden sm:flex items-center gap-2">
+        <span class="glass-soft rounded-full px-3 py-1.5 text-xs text-slate-300 flex items-center gap-1.5">
+          <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+            <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Online
+        </span>
+        <a href="#how" class="glass-soft rounded-full px-4 py-1.5 text-xs text-slate-200 hover:text-white transition">How it works</a>
+      </div>
+
+      <div class="sm:hidden">
+        <span class="glass-soft rounded-full px-3 py-1.5 text-xs text-slate-300 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-soft"></span>
+          Online
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ============================= MAIN ============================= -->
+<main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
+
+  <!-- HERO -->
+  <section class="pt-10 sm:pt-16 pb-10 text-center fade-in">
+    <div class="inline-flex items-center gap-2 glass-soft rounded-full px-4 py-1.5 text-xs text-slate-300 mb-6">
+      <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 text-snow-400" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linejoin="round"/>
+      </svg>
+      Instant Activation &middot; Secure &middot; No Password
+    </div>
+
+    <h2 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05]">
+      <span class="text-white">Alight Motion</span><br/>
+      <span class="bg-gradient-to-r from-snow-300 via-sky-400 to-indigo-400 bg-clip-text text-transparent">Premium Access</span>
+    </h2>
+
+    <p class="mt-5 text-sm sm:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
+      Activate Alight Motion Premium on your account using secure email-link verification. No password required, no data stored.
+    </p>
+
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs">
+      <div class="glass-soft rounded-full px-4 py-2 flex items-center gap-2 text-slate-300">
+        <svg viewBox="0 0 24 24" class="w-4 h-4 text-snow-400" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linejoin="round"/>
+        </svg>
+        Encrypted Link
+      </div>
+      <div class="glass-soft rounded-full px-4 py-2 flex items-center gap-2 text-slate-300">
+        <svg viewBox="0 0 24 24" class="w-4 h-4 text-snow-400" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3 2" stroke-linecap="round"/>
+        </svg>
+        Instant Delivery
+      </div>
+      <div class="glass-soft rounded-full px-4 py-2 flex items-center gap-2 text-slate-300">
+        <svg viewBox="0 0 24 24" class="w-4 h-4 text-snow-400" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Annual Plan
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== STEP INDICATOR ====================== -->
+  <section class="max-w-2xl mx-auto mb-6">
+    <div class="glass rounded-2xl px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div id="dot-1" class="step-dot step-active w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold">1</div>
+          <div class="hidden sm:block">
+            <p class="text-xs font-semibold text-white">Email</p>
+            <p class="text-[10px] text-slate-400">Enter your address</p>
+          </div>
+        </div>
+        <div class="flex-1 mx-3 h-px bg-gradient-to-r from-snow-500/40 via-white/10 to-white/10"></div>
+        <div class="flex items-center gap-3">
+          <div id="dot-2" class="step-dot step-idle w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold">2</div>
+          <div class="hidden sm:block">
+            <p class="text-xs font-semibold text-slate-400">Verify</p>
+            <p class="text-[10px] text-slate-500">Paste link</p>
+          </div>
+        </div>
+        <div class="flex-1 mx-3 h-px bg-white/10"></div>
+        <div class="flex items-center gap-3">
+          <div id="dot-3" class="step-dot step-idle w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold">3</div>
+          <div class="hidden sm:block">
+            <p class="text-xs font-semibold text-slate-400">Premium</p>
+            <p class="text-[10px] text-slate-500">Activated</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== MAIN CARD ====================== -->
+  <section class="max-w-2xl mx-auto">
+    <div class="glass rounded-3xl p-6 sm:p-8 fade-in">
+
+      <!-- STEP 1 -->
+      <div id="panel-1">
+        <div class="flex items-start gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl glass-soft flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" class="w-5 h-5 text-snow-400" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <path d="M22 6l-10 7L2 6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-white">Enter your email</h3>
+            <p class="text-xs text-slate-400 mt-1">We'll send a secure verification link to this address.</p>
+          </div>
+        </div>
+
+        <label class="block text-xs font-medium text-slate-300 mb-2">Email Address</label>
+        <div class="relative">
+          <svg viewBox="0 0 24 24" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <path d="M22 6l-10 7L2 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input id="emailInput" type="email" autocomplete="email" placeholder="you@example.com"
+            class="input-glass w-full rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-slate-500"/>
+        </div>
+
+        <button id="sendBtn" class="btn-primary w-full mt-5 rounded-xl py-3 text-sm font-semibold text-white flex items-center justify-center gap-2">
+          <svg id="sendIcon" viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span id="sendText">Send Verification Link</span>
+        </button>
+
+        <div id="alert-1" class="hidden mt-4 rounded-xl px-4 py-3 text-xs"></div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div id="panel-2" class="hidden">
+        <div class="flex items-start gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl glass-soft flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" class="w-5 h-5 text-snow-400" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-white">Paste verification link</h3>
+            <p class="text-xs text-slate-400 mt-1">Copy the link from your email and paste it below.</p>
+          </div>
+        </div>
+
+        <div class="glass-soft rounded-xl px-4 py-3 mb-4 flex items-center gap-3">
+          <svg viewBox="0 0 24 24" class="w-4 h-4 text-snow-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <path d="M22 6l-10 7L2 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="min-w-0">
+            <p class="text-[10px] text-slate-400 uppercase tracking-wider">Sending to</p>
+            <p id="emailDisplay" class="text-xs font-medium text-white truncate">—</p>
+          </div>
+          <button id="changeEmail" class="ml-auto text-[11px] text-snow-400 hover:text-snow-300 transition">Change</button>
+        </div>
+
+        <label class="block text-xs font-medium text-slate-300 mb-2">Verification Link</label>
+        <textarea id="linkInput" rows="3" placeholder="https://alight-creative.firebaseapp.com/__/auth/action?mode=signIn&oobCode=...&apiKey=..."
+          class="input-glass w-full rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 resize-none font-mono text-xs"></textarea>
+
+        <button id="verifyBtn" class="btn-primary w-full mt-5 rounded-xl py-3 text-sm font-semibold text-white flex items-center justify-center gap-2">
+          <svg id="verifyIcon" viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linejoin="round"/>
+            <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span id="verifyText">Verify & Activate Premium</span>
+        </button>
+
+        <div id="alert-2" class="hidden mt-4 rounded-xl px-4 py-3 text-xs"></div>
+      </div>
+
+      <!-- STEP 3: SUCCESS -->
+      <div id="panel-3" class="hidden text-center py-4">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full glass-soft glow-ring mb-5">
+          <svg viewBox="0 0 24 24" class="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 4L12 14.01l-3-3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <h3 class="text-2xl font-bold text-white">Premium Activated</h3>
+        <p class="text-sm text-slate-400 mt-2">Your Alight Motion account has been upgraded successfully.</p>
+
+        <div class="mt-6 glass-soft rounded-2xl p-5 text-left space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-400">Email</span>
+            <span id="r-email" class="text-xs font-medium text-white truncate ml-3">—</span>
+          </div>
+          <div class="divider-glass"></div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-400">User ID</span>
+            <span id="r-uid" class="text-xs font-medium text-white font-mono truncate ml-3">—</span>
+          </div>
+          <div class="divider-glass"></div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-400">Order ID</span>
+            <span id="r-order" class="text-xs font-medium text-snow-300 font-mono truncate ml-3">—</span>
+          </div>
+          <div class="divider-glass"></div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-400">Plan</span>
+            <span class="text-xs font-medium text-white">Annual &middot; Full</span>
+          </div>
+          <div class="divider-glass"></div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-400">Status</span>
+            <span class="glass-soft rounded-full px-3 py-1 text-[10px] font-semibold text-emerald-400 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-soft"></span>
+              ACTIVE
+            </span>
+          </div>
+        </div>
+
+        <button id="restartBtn" class="btn-primary w-full mt-6 rounded-xl py-3 text-sm font-semibold text-white flex items-center justify-center gap-2">
+          <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 4v6h6M23 20v-6h-6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Activate Another Account
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Security note -->
+    <div class="max-w-2xl mx-auto mt-4 glass-soft rounded-2xl px-5 py-4 flex items-start gap-3">
+      <svg viewBox="0 0 24 24" class="w-4 h-4 text-snow-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linejoin="round"/>
+      </svg>
+      <p class="text-[11px] text-slate-400 leading-relaxed">
+        Your credentials are never stored. Verification is done via a one-time Firebase email link that expires after use.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====================== HOW IT WORKS ====================== -->
+  <section id="how" class="mt-20 max-w-5xl mx-auto">
+    <div class="text-center mb-10">
+      <h3 class="text-2xl sm:text-3xl font-bold text-white">How it works</h3>
+      <p class="text-sm text-slate-400 mt-2">Three simple steps. Under a minute.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl glass-soft flex items-center justify-center mb-4">
+          <svg viewBox="0 0 24 24" class="w-5 h-5 text-snow-400" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <path d="M22 6l-10 7L2 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p class="text-[10px] uppercase tracking-wider text-snow-400 font-semibold">Step 01</p>
+        <h4 class="text-sm font-semibold text-white mt-1">Enter Email</h4>
+        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Provide the email linked to your Alight Motion account.</p>
+      </div>
+
+      <div class="glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl glass-soft flex items-center justify-center mb-4">
+          <svg viewBox="0 0 24 24" class="w-5 h-5 text-snow-400" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p class="text-[10px] uppercase tracking-wider text-snow-400 font-semibold">Step 02</p>
+        <h4 class="text-sm font-semibold text-white mt-1">Paste Link</h4>
+        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Copy the verification link from your inbox and paste it here.</p>
+      </div>
+
+      <div class="glass rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl glass-soft flex items-center justify-center mb-4">
+          <svg viewBox="0 0 24 24" class="w-5 h-5 text-snow-400" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p class="text-[10px] uppercase tracking-wider text-snow-400 font-semibold">Step 03</p>
+        <h4 class="text-sm font-semibold text-white mt-1">Get Premium</h4>
+        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Your account is promoted instantly — no password, no hassle.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================= FOOTER ============================= -->
+<footer class="border-t border-white/5">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2.5">
+      <div class="w-7 h-7 rounded-lg glass-soft flex items-center justify-center">
+        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 text-snow-400" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 2v20M4.93 4.93l14.14 14.14M2 12h20M4.93 19.07l14.14-14.14" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="text-xs text-slate-400">SnowyPay &middot; All rights reserved</span>
+    </div>
+    <div class="flex items-center gap-2 text-[11px] text-slate-500">
+      <svg viewBox="0 0 24 24" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Secure connection
+    </div>
+  </div>
+</footer>
+
+<!-- ============================= SCRIPT ============================= -->
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  const els = {
+    email: $('emailInput'),
+    link: $('linkInput'),
+    sendBtn: $('sendBtn'),
+    sendText: $('sendText'),
+    sendIcon: $('sendIcon'),
+    verifyBtn: $('verifyBtn'),
+    verifyText: $('verifyText'),
+    verifyIcon: $('verifyIcon'),
+    alert1: $('alert-1'),
+    alert2: $('alert-2'),
+    emailDisplay: $('emailDisplay'),
+    changeEmail: $('changeEmail'),
+    restartBtn: $('restartBtn'),
+    panel1: $('panel-1'),
+    panel2: $('panel-2'),
+    panel3: $('panel-3'),
+    dot1: $('dot-1'),
+    dot2: $('dot-2'),
+    dot3: $('dot-3'),
+    rEmail: $('r-email'),
+    rUid: $('r-uid'),
+    rOrder: $('r-order')
+  };
+
+  let state = { email: '' };
+
+  const showAlert = (el, type, msg) => {
+    const map = {
+      success: 'bg-emerald-500/10 border border-emerald-400/30 text-emerald-300',
+      error: 'bg-rose-500/10 border border-rose-400/30 text-rose-300',
+      info: 'bg-sky-500/10 border border-sky-400/30 text-sky-300'
+    };
+    el.className = `mt-4 rounded-xl px-4 py-3 text-xs flex items-start gap-2 ${map[type]}`;
+    el.innerHTML = `<svg viewBox="0 0 24 24" class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2">
+      ${type === 'success'
+        ? '<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3" stroke-linecap="round" stroke-linejoin="round"/>'
+        : type === 'error'
+          ? '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/>'
+          : '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/>'}
+    </svg><span>${msg}</span>`;
+    el.classList.remove('hidden');
+  };
+
+  const hideAlert = (el) => el.classList.add('hidden');
+
+  const setLoading = (btn, icon, text, label, loading) => {
+    btn.disabled = loading;
+    if (loading) {
+      icon.outerHTML = `<svg id="${icon.id}" viewBox="0 0 24 24" class="w-4 h-4 spin" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 11-6.219-8.56" stroke-linecap="round"/></svg>`;
+      text.textContent = label;
+    } else {
+      icon.outerHTML = `<svg id="${icon.id}" viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"><path d="${icon.dataset.path || 'M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z'}" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      text.textContent = label;
+    }
+  };
+
+  const goStep = (n) => {
+    [els.panel1, els.panel2, els.panel3].forEach((p, i) => p.classList.toggle('hidden', i !== n - 1));
+    [els.dot1, els.dot2, els.dot3].forEach((d, i) => {
+      d.className = 'step-dot w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold';
+      if (i + 1 < n) d.classList.add('step-done');
+      else if (i + 1 === n) d.classList.add('step-active');
+      else d.classList.add('step-idle');
+      d.innerHTML = i + 1 < n ? '<svg viewBox="0 0 24 24" class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>' : String(i + 1);
+    });
+  };
+
+  /* ---------- SEND LINK ---------- */
+  els.sendBtn.addEventListener('click', async () => {
+    const email = els.email.value.trim();
+    hideAlert(els.alert1);
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return showAlert(els.alert1, 'error', 'Please enter a valid email address.');
+    }
+
+    const icon = $('sendIcon');
+    icon.dataset.path = 'M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z';
+    setLoading(els.sendBtn, icon, els.sendText, 'Sending link...', true);
+
+    try {
+      const r = await fetch('/api/send-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const j = await r.json();
+      if (!j.ok) throw new Error(j.why || 'Failed to send link');
+
+      state.email = email;
+      els.emailDisplay.textContent = email;
+      showAlert(els.alert1, 'success', 'Verification link sent. Check your inbox (and spam folder).');
+
+      setTimeout(() => {
+        goStep(2);
+        els.link.focus();
+      }, 700);
+    } catch (e) {
+      showAlert(els.alert1, 'error', e.message);
+    } finally {
+      setLoading(els.sendBtn, $('sendIcon'), els.sendText, 'Send Verification Link', false);
+    }
+  });
+
+  /* ---------- VERIFY ---------- */
+  els.verifyBtn.addEventListener('click', async () => {
+    const link = els.link.value.trim();
+    hideAlert(els.alert2);
+
+    if (!link) return showAlert(els.alert2, 'error', 'Please paste the verification link.');
+    if (!state.email) {
+      goStep(1);
+      return showAlert(els.alert1, 'error', 'Session expired. Please re-enter your email.');
+    }
+
+    const icon = $('verifyIcon');
+    icon.dataset.path = 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z';
+    setLoading(els.verifyBtn, icon, els.verifyText, 'Activating premium...', true);
+
+    try {
+      const r = await fetch('/api/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: state.email, link })
+      });
+      const j = await r.json();
+      if (!j.ok) throw new Error(j.why || 'Verification failed');
+
+      els.rEmail.textContent = j.email || state.email;
+      els.rUid.textContent = (j.uid || '—').slice(0, 18) + ((j.uid && j.uid.length > 18) ? '…' : '');
+      els.rOrder.textContent = j.order || '—';
+
+      goStep(3);
+    } catch (e) {
+      showAlert(els.alert2, 'error', e.message);
+    } finally {
+      setLoading(els.verifyBtn, $('verifyIcon'), els.verifyText, 'Verify & Activate Premium', false);
+    }
+  });
+
+  /* ---------- NAV ---------- */
+  els.changeEmail.addEventListener('click', () => {
+    hideAlert(els.alert2);
+    goStep(1);
+    els.email.focus();
+  });
+
+  els.restartBtn.addEventListener('click', () => {
+    state.email = '';
+    els.email.value = '';
+    els.link.value = '';
+    hideAlert(els.alert1);
+    hideAlert(els.alert2);
+    goStep(1);
+    els.email.focus();
+  });
+
+  /* ---------- ENTER shortcut ---------- */
+  els.email.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') els.sendBtn.click();
+  });
+})();
+</script>
+
+</body>
+</html>
